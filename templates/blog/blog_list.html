@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="container">
+    <p class="eyebrow">Insights</p>
+    <h1>Software and automation thinking for growing businesses.</h1>
+    <p>Practical notes on business digitization, AI automation, WhatsApp workflows, payments, dashboards, and MVP development.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="pill-grid compact">
+      {% for category in categories %}
+        <span>{{ category.name }}</span>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="container card-grid three spacer-top">
+    {% for post in posts %}
+      <article class="card">
+        <p class="tag">{{ post.category.name }}</p>
+        <h2><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h2>
+        <p>{{ post.excerpt }}</p>
+        <a class="text-link" href="{{ post.get_absolute_url }}">Read insight</a>
+      </article>
+    {% empty %}
+      <article class="card">
+        <h2>Insights coming soon</h2>
+        <p>Published articles will appear here after they are reviewed and published from Django Admin.</p>
+      </article>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

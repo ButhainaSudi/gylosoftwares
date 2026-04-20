@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="hero">
+  <div class="container hero-inner">
+    <div class="hero-copy">
+      <p class="eyebrow">Software engineering and AI automation in Tanzania</p>
+      <h1>Build software that runs your business smarter.</h1>
+      <p>GyLo Softwares helps companies design, build, and launch reliable web apps, mobile apps, AI automations, dashboards, and business systems that improve operations, sales, and customer service.</p>
+      <div class="button-row">
+        <a class="button button-primary" href="{% url 'leads:start_project' %}">Start a Project</a>
+        <a class="button button-secondary-dark" href="{% url 'projects:list' %}">View Our Work</a>
+      </div>
+    </div>
+    <img class="hero-mark" src="{% static 'images/logo-mark.png' %}" alt="GyLo Softwares brand mark">
+  </div>
+</section>
+
+<section class="section">
+  <div class="container section-heading">
+    <p class="eyebrow">Services</p>
+    <h2>Digital systems for serious business operations.</h2>
+    <p>From strategy to launch, GyLo builds practical software that improves workflows, integrations, reporting, and customer communication.</p>
+  </div>
+  <div class="container card-grid three">
+    {% for service in services %}
+      <article class="card">
+        <span class="card-icon">{{ service.icon|default:"GL" }}</span>
+        <h3><a href="{{ service.get_absolute_url }}">{{ service.title }}</a></h3>
+        <p>{{ service.short_description }}</p>
+      </article>
+    {% empty %}
+      <article class="card">
+        <h3>Custom Software Development</h3>
+        <p>Business systems, dashboards, portals, workflow tools, and marketplace platforms.</p>
+      </article>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="section section-soft">
+  <div class="container section-heading">
+    <p class="eyebrow">Featured work</p>
+    <h2>Project concepts built around real business problems.</h2>
+  </div>
+  <div class="container card-grid three">
+    {% for project in projects %}
+      <article class="card project-card">
+        <p class="tag">{{ project.industry }}</p>
+        <h3><a href="{{ project.get_absolute_url }}">{{ project.title }}</a></h3>
+        <p>{{ project.tagline }}</p>
+        <a class="text-link" href="{{ project.get_absolute_url }}">View project</a>
+      </article>
+    {% empty %}
+      <article class="card"><h3>Vuma</h3><p>Influencer marketplace for African brands and creators.</p></article>
+      <article class="card"><h3>Kiosk</h3><p>SME WhatsApp Automation Suite for Tanzanian businesses.</p></article>
+      <article class="card"><h3>Instagram Fraud Detection</h3><p>Machine learning-based trust and fraud detection system.</p></article>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="section">
+  <div class="container split">
+    <div>
+      <p class="eyebrow">Why GyLo</p>
+      <h2>Built for business outcomes, not just code delivery.</h2>
+      <p>We focus on clear requirements, maintainable systems, strong backend foundations, and practical automation that teams can actually use.</p>
+    </div>
+    <div class="check-list">
+      <p>Business-first software development</p>
+      <p>Strong backend engineering</p>
+      <p>AI and automation capability</p>
+      <p>Local Tanzanian market understanding</p>
+      <p>Payment and WhatsApp integration knowledge</p>
+      <p>Long-term technical support mindset</p>
+    </div>
+  </div>
+</section>
+
+<section class="section section-soft">
+  <div class="container section-heading">
+    <p class="eyebrow">Industries</p>
+    <h2>Software for teams that need operational clarity.</h2>
+  </div>
+  <div class="container pill-grid">
+    {% for industry in industries %}
+      <span>{{ industry.name }}</span>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="section">
+  <div class="container section-heading">
+    <p class="eyebrow">Process</p>
+    <h2>A simple path from idea to launch.</h2>
+  </div>
+  <div class="container process-grid">
+    <article><span>01</span><h3>Discover</h3><p>Clarify the business problem, users, workflows, risks, and success criteria.</p></article>
+    <article><span>02</span><h3>Design</h3><p>Plan the system structure, user flows, integrations, and delivery milestones.</p></article>
+    <article><span>03</span><h3>Build</h3><p>Develop, test, and refine the core product using practical engineering standards.</p></article>
+    <article><span>04</span><h3>Launch</h3><p>Deploy, monitor, and support the system as it starts serving real users.</p></article>
+  </div>
+</section>
+
+{% include "includes/cta_band.html" %}
+{% endblock %}

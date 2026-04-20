@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="container">
+    <p class="eyebrow">Services</p>
+    <h1>Custom software, AI automation, and business systems.</h1>
+    <p>GyLo Softwares helps companies move from manual work and disconnected tools to reliable digital platforms that improve operations and growth.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container card-grid three">
+    {% for service in services %}
+      <article class="card">
+        <span class="card-icon">{{ service.icon|default:"GL" }}</span>
+        <h2><a href="{{ service.get_absolute_url }}">{{ service.title }}</a></h2>
+        <p>{{ service.short_description }}</p>
+        <a class="text-link" href="{{ service.get_absolute_url }}">Learn more</a>
+      </article>
+    {% endfor %}
+  </div>
+</section>
+
+{% include "includes/cta_band.html" %}
+{% endblock %}

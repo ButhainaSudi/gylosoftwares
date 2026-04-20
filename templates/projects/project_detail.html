@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="container">
+    <p class="eyebrow">{{ project.industry }}</p>
+    <h1>{{ project.title }}</h1>
+    <p>{{ project.tagline }}</p>
+    <a class="button button-primary" href="{% url 'leads:start_project' %}">{% if project.slug == "vuma" %}Build a marketplace like this{% elif project.slug == "kiosk" %}Automate my business{% else %}Build an AI risk system{% endif %}</a>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container split">
+    <div>
+      <h2>Summary</h2>
+      <p>{{ project.summary }}</p>
+      <h2>Problem</h2>
+      <p>{{ project.problem }}</p>
+      <h2>Solution</h2>
+      <p>{{ project.solution }}</p>
+      <h2>Business value</h2>
+      <p>This type of system helps teams reduce manual coordination, improve visibility, create structured workflows, and support better decisions with reliable digital records.</p>
+    </div>
+    <aside>
+      <div class="card">
+        <h2>Key features</h2>
+        <ul class="clean-list">
+          {% for feature in project.feature_list %}
+            <li>{{ feature }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="card spacer-top">
+        <h2>Technology approach</h2>
+        <ul class="clean-list">
+          {% for item in project.tech_list %}
+            <li>{{ item }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </aside>
+  </div>
+</section>
+
+{% include "includes/cta_band.html" %}
+{% endblock %}

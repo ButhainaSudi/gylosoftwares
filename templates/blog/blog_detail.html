@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+<article>
+  <section class="page-hero compact">
+    <div class="container narrow">
+      <p class="eyebrow">{{ post.category.name }}</p>
+      <h1>{{ post.title }}</h1>
+      <p>{{ post.excerpt }}</p>
+    </div>
+  </section>
+  <section class="section legal">
+    <div class="container narrow">
+      {{ post.content|linebreaks }}
+    </div>
+  </section>
+</article>
+
+{% include "includes/cta_band.html" %}
+{% endblock %}

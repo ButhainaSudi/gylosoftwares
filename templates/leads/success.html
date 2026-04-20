@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="page-hero compact">
+  <div class="container">
+    <p class="eyebrow">Received</p>
+    <h1>Thank you. We have received your submission.</h1>
+    <p>GyLo Softwares will review your message and respond as soon as possible.</p>
+    <div class="button-row">
+      <a class="button button-primary" href="{{ whatsapp_url }}">WhatsApp Us</a>
+      <a class="button button-secondary" href="{% url 'pages:home' %}">Back Home</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

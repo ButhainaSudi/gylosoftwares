@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="container">
+    <p class="eyebrow">Industries</p>
+    <h1>Digital systems for Tanzanian businesses across key sectors.</h1>
+    <p>GyLo helps companies replace scattered manual work with software that improves visibility, communication, and decision-making.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container card-grid two">
+    {% for industry in industries %}
+      <article class="card">
+        <h2>{{ industry.name }}</h2>
+        <p><strong>Common problem:</strong> {{ industry.problem }}</p>
+        <p><strong>How GyLo helps:</strong> {{ industry.help }}</p>
+        <p><strong>Example solution:</strong> {{ industry.example }}</p>
+      </article>
+    {% endfor %}
+  </div>
+</section>
+
+{% include "includes/cta_band.html" %}
+{% endblock %}

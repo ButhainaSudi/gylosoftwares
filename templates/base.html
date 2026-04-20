@@ -1,0 +1,82 @@
+{% load static seo_tags %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ meta_title|default:"GyLo Softwares | Software Development in Tanzania" }}</title>
+  <meta name="description" content="{{ meta_description|default:'GyLo Softwares builds custom software, AI automation systems, web apps, mobile apps, dashboards, and business systems for companies in Tanzania and beyond.' }}">
+  <link rel="canonical" href="{{ canonical_url|default:site_url }}">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{{ meta_title|default:'GyLo Softwares' }}">
+  <meta property="og:description" content="{{ meta_description|default:'Custom software, AI automation, dashboards, and business systems for growing companies.' }}">
+  <meta property="og:url" content="{{ canonical_url|default:site_url }}">
+  <meta property="og:image" content="{{ site_url }}{% static 'images/logo-og.png' %}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ meta_title|default:'GyLo Softwares' }}">
+  <meta name="twitter:description" content="{{ meta_description|default:'Custom software, AI automation, dashboards, and business systems for growing companies.' }}">
+  <link rel="icon" href="{% static 'images/logo-mark-small.png' %}">
+  <link rel="apple-touch-icon" href="{% static 'images/apple-touch-icon.png' %}">
+  <link rel="stylesheet" href="{% static 'css/site.css' %}">
+  {% for item in structured_data %}
+    <script type="application/ld+json">{{ item|json_ld }}</script>
+  {% endfor %}
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="{% url 'pages:home' %}" aria-label="GyLo Softwares home">
+        <img src="{% static 'images/logo-mark-small.png' %}" alt="GyLo Softwares logo" width="42" height="42">
+        <span>GyLo Softwares</span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="{% url 'services:list' %}">Services</a>
+        <a href="{% url 'projects:list' %}">Projects</a>
+        <a href="{% url 'pages:industries' %}">Industries</a>
+        <a href="{% url 'blog:list' %}">Blog</a>
+        <a href="{% url 'pages:about' %}">About</a>
+        <a href="{% url 'leads:contact' %}">Contact</a>
+        <a class="nav-cta" href="{% url 'leads:start_project' %}">Start a Project</a>
+      </nav>
+    </div>
+  </header>
+  <main id="main">
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <a class="brand footer-brand" href="{% url 'pages:home' %}">
+          <img src="{% static 'images/logo-mark-small.png' %}" alt="GyLo Softwares logo" width="42" height="42">
+          <span>GyLo Softwares</span>
+        </a>
+        <p>{{ company_legal_name }} builds custom software, AI automation systems, and digital platforms for growing businesses in Tanzania and beyond.</p>
+      </div>
+      <div>
+        <h2>Company</h2>
+        <a href="{% url 'services:list' %}">Services</a>
+        <a href="{% url 'projects:list' %}">Projects</a>
+        <a href="{% url 'pages:industries' %}">Industries</a>
+        <a href="{% url 'pages:about' %}">About</a>
+      </div>
+      <div>
+        <h2>Contact</h2>
+        <a href="mailto:{{ company_email }}">{{ company_email }}</a>
+        <a href="{{ whatsapp_url }}">WhatsApp {{ company_whatsapp }}</a>
+        <p>{{ company_address }}</p>
+        <a href="{{ instagram_url }}" rel="noopener">Instagram</a>
+      </div>
+      <div>
+        <h2>Legal</h2>
+        <a href="{% url 'pages:privacy' %}">Privacy Policy</a>
+        <a href="{% url 'pages:terms' %}">Terms of Service</a>
+        <a href="{% url 'leads:start_project' %}">Start a Project</a>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <span>&copy; {% now "Y" %} {{ company_legal_name }}. All rights reserved.</span>
+    </div>
+  </footer>
+</body>
+</html>

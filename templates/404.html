@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="page-hero compact">
+  <div class="container">
+    <p class="eyebrow">404</p>
+    <h1>Page not found.</h1>
+    <p>The page may have moved, or the link may be incorrect.</p>
+    <a class="button button-primary" href="{% url 'pages:home' %}">Go Home</a>
+  </div>
+</section>
+{% endblock %}

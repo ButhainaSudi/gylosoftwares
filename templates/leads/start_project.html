@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="page-hero compact">
+  <div class="container">
+    <p class="eyebrow">Start a Project</p>
+    <h1>Tell us what you want to build.</h1>
+    <p>Share the core business problem, expected timeline, and project type. GyLo will review and respond with practical next steps.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container narrow">
+    <form class="form-card" method="post" enctype="multipart/form-data" novalidate>
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+      <div class="form-grid">
+        {% for field in form %}
+          {% include "includes/form_field.html" with field=field %}
+        {% endfor %}
+      </div>
+      <button class="button button-primary" type="submit">Submit Project Inquiry</button>
+    </form>
+  </div>
+</section>
+{% endblock %}
