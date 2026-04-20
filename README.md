@@ -68,12 +68,12 @@ python manage.py migrate
 python manage.py seed_initial_content
 ```
 
-This creates:
+This creates or updates matching slugs for:
 
 - 6 services
 - 3 projects: Vuma, Kiosk, Instagram Fraud Detection
 - Blog categories
-- 5 draft blog posts
+- 10 corporate blog posts: 5 published and 5 draft
 
 ## Tests
 

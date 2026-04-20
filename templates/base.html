@@ -18,6 +18,7 @@
   <link rel="icon" href="{% static 'images/logo-mark-small.png' %}">
   <link rel="apple-touch-icon" href="{% static 'images/apple-touch-icon.png' %}">
   <link rel="stylesheet" href="{% static 'css/site.css' %}">
+  <script src="{% static 'js/site.js' %}" defer></script>
   {% for item in structured_data %}
     <script type="application/ld+json">{{ item|json_ld }}</script>
   {% endfor %}
@@ -30,7 +31,16 @@
         <img src="{% static 'images/logo-mark-small.png' %}" alt="GyLo Softwares logo" width="42" height="42">
         <span>GyLo Softwares</span>
       </a>
-      <nav class="site-nav" aria-label="Main navigation">
+      <div class="mobile-header-actions">
+        <a class="mobile-header-cta" href="{% url 'leads:start_project' %}">Start</a>
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-navigation">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span class="visually-hidden">Menu</span>
+        </button>
+      </div>
+      <nav class="site-nav" id="site-navigation" aria-label="Main navigation">
         <a href="{% url 'services:list' %}">Services</a>
         <a href="{% url 'projects:list' %}">Projects</a>
         <a href="{% url 'pages:industries' %}">Industries</a>
