@@ -98,9 +98,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-# DATABASES = {
-#     "default": env.db(default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}"),
-# }
 
 DATABASES = {
     'default': dj_database_url.config(
