@@ -15,7 +15,7 @@ def organization_schema():
         "name": "GyLo Softwares Company Limited",
         "url": settings.SITE_URL,
         "email": "support@gylosoftwares.com",
-        "telephone": "+491745764722",
+        "telephone": "+255614725009",
         "address": {
             "@type": "PostalAddress",
             "streetAddress": "19 Nzasa B",
