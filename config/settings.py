@@ -167,6 +167,10 @@ DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="GyLo Softwares <support@
 ADMIN_EMAIL = env("ADMIN_EMAIL", default="support@gylosoftwares.com")
 ADMIN_EMAILS = [email for email in env.list("ADMIN_EMAILS", default=[ADMIN_EMAIL]) if email]
 EMAIL_TIMEOUT = 10
+POSTMARK_SERVER_TOKEN = env("POSTMARK_SERVER_TOKEN", default="")
+POSTMARK_API_URL = env("POSTMARK_API_URL", default="https://api.postmarkapp.com/email")
+POSTMARK_MESSAGE_STREAM = env("POSTMARK_MESSAGE_STREAM", default="outbound")
+POSTMARK_SANDBOX_MODE = env("POSTMARK_SANDBOX_MODE", cast=bool, default=False)
 EMAIL_BACKEND = (
     "django.core.mail.backends.smtp.EmailBackend"
     if EMAIL_HOST

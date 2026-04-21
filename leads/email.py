@@ -1,4 +1,7 @@
+import json
 import logging
+import urllib.error
+import urllib.request
 
 from django.conf import settings
 from django.core.mail import EmailMessage
@@ -17,16 +20,73 @@ def admin_recipients():
     return getattr(settings, "ADMIN_EMAILS", None) or [settings.ADMIN_EMAIL]
 
 
+def comma_join(addresses):
+    return ", ".join(addresses)
+
+
+def _from_domain():
+    addr = settings.DEFAULT_FROM_EMAIL
+    email_part = addr[addr.rfind("<") + 1:].rstrip(">") if "<" in addr else addr
+    return email_part.split("@")[-1].lower()
+
+
+def send_postmark_email(subject, message, recipient_list, reply_to=None):
+    if getattr(settings, "POSTMARK_SANDBOX_MODE", False):
+        domain = _from_domain()
+        filtered = [r for r in recipient_list if r.lower().endswith(f"@{domain}")]
+        if not filtered:
+            logger.info("Sandbox mode: skipping email to external recipients %s", recipient_list)
+            return
+        if len(filtered) < len(recipient_list):
+            logger.info("Sandbox mode: dropped external recipients, sending only to %s", filtered)
+        recipient_list = filtered
+
+    payload = {
+        "From": settings.DEFAULT_FROM_EMAIL,
+        "To": comma_join(recipient_list),
+        "Subject": subject,
+        "TextBody": message,
+        "MessageStream": settings.POSTMARK_MESSAGE_STREAM,
+    }
+    if reply_to:
+        payload["ReplyTo"] = comma_join(reply_to)
+
+    request = urllib.request.Request(
+        settings.POSTMARK_API_URL,
+        data=json.dumps(payload).encode("utf-8"),
+        headers={
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+            "X-Postmark-Server-Token": settings.POSTMARK_SERVER_TOKEN,
+        },
+        method="POST",
+    )
+    with urllib.request.urlopen(request, timeout=settings.EMAIL_TIMEOUT) as response:
+        if response.status >= 400:
+            body = response.read().decode("utf-8", errors="replace")
+            raise RuntimeError(f"Postmark API returned HTTP {response.status}: {body}")
+
+
+def send_django_email(subject, message, recipient_list, reply_to=None):
+    email = EmailMessage(
+        subject=subject,
+        body=message,
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        to=recipient_list,
+        reply_to=reply_to or None,
+    )
+    email.send(fail_silently=False)
+
+
 def safe_send_mail(subject, message, recipient_list, fail_context, reply_to=None):
     try:
-        email = EmailMessage(
-            subject=subject,
-            body=message,
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            to=recipient_list,
-            reply_to=reply_to or None,
-        )
-        email.send(fail_silently=False)
+        if settings.POSTMARK_SERVER_TOKEN:
+            send_postmark_email(subject, message, recipient_list, reply_to=reply_to)
+        else:
+            send_django_email(subject, message, recipient_list, reply_to=reply_to)
+    except urllib.error.HTTPError as exc:
+        body = exc.read().decode("utf-8", errors="replace")
+        logger.exception("Email delivery failed: %s. Postmark response: %s", fail_context, body)
     except Exception:
         logger.exception("Email delivery failed: %s", fail_context)
 

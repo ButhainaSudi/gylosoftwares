@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 from django.core import mail
 from django.test import TestCase, override_settings
 from django.urls import reverse
@@ -8,6 +10,7 @@ from .models import ContactMessage, Lead
 @override_settings(
     EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend",
     ADMIN_EMAILS=["support@gylosoftwares.com", "ops@gylosoftwares.com"],
+    POSTMARK_SERVER_TOKEN="",
     SITE_URL="https://gylosoftwares.com",
 )
 class LeadFormTests(TestCase):
@@ -62,3 +65,35 @@ class LeadFormTests(TestCase):
         self.assertIn("Lead ID:", admin_email.body)
         self.assertIn("Attachment uploaded: No", admin_email.body)
         self.assertIn("View in admin: https://gylosoftwares.com/admin/leads/lead/", admin_email.body)
+
+
+@override_settings(
+    POSTMARK_SERVER_TOKEN="pm_test_token",
+    POSTMARK_API_URL="https://api.postmark.test/email",
+    POSTMARK_MESSAGE_STREAM="outbound",
+    DEFAULT_FROM_EMAIL="GyLo Softwares <support@gylosoftwares.com>",
+    EMAIL_TIMEOUT=10,
+)
+class PostmarkEmailTests(TestCase):
+    @patch("leads.email.urllib.request.urlopen")
+    def test_postmark_payload_includes_plain_text_and_reply_to(self, mock_urlopen):
+        from leads.email import safe_send_mail
+
+        mock_urlopen.return_value.__enter__.return_value.status = 200
+
+        safe_send_mail(
+            "New contact message: Asha Trading",
+            "Body text",
+            ["support@gylosoftwares.com"],
+            "contact message test",
+            reply_to=["asha@example.com"],
+        )
+
+        request = mock_urlopen.call_args.args[0]
+        self.assertEqual(request.full_url, "https://api.postmark.test/email")
+        self.assertEqual(request.get_header("X-postmark-server-token"), "pm_test_token")
+        self.assertIn(b'"From": "GyLo Softwares <support@gylosoftwares.com>"', request.data)
+        self.assertIn(b'"To": "support@gylosoftwares.com"', request.data)
+        self.assertIn(b'"TextBody": "Body text"', request.data)
+        self.assertIn(b'"ReplyTo": "asha@example.com"', request.data)
+        self.assertIn(b'"MessageStream": "outbound"', request.data)
