@@ -1,21 +1,32 @@
 import logging
 
 from django.conf import settings
-from django.core.mail import send_mail
+from django.core.mail import EmailMessage
+from django.urls import reverse
 
 
 logger = logging.getLogger(__name__)
 
 
-def safe_send_mail(subject, message, recipient_list, fail_context):
+def admin_change_url(obj):
+    url_name = f"admin:{obj._meta.app_label}_{obj._meta.model_name}_change"
+    return f"{settings.SITE_URL}{reverse(url_name, args=[obj.pk])}"
+
+
+def admin_recipients():
+    return getattr(settings, "ADMIN_EMAILS", None) or [settings.ADMIN_EMAIL]
+
+
+def safe_send_mail(subject, message, recipient_list, fail_context, reply_to=None):
     try:
-        send_mail(
+        email = EmailMessage(
             subject=subject,
-            message=message,
+            body=message,
             from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=recipient_list,
-            fail_silently=False,
+            to=recipient_list,
+            reply_to=reply_to or None,
         )
+        email.send(fail_silently=False)
     except Exception:
         logger.exception("Email delivery failed: %s", fail_context)
 
@@ -23,18 +34,22 @@ def safe_send_mail(subject, message, recipient_list, fail_context):
 def notify_contact_message(message_obj):
     admin_message = (
         "New contact message submitted.\n\n"
+        f"Message ID: {message_obj.id}\n"
         f"Name: {message_obj.full_name}\n"
         f"Company: {message_obj.company_name or 'Not provided'}\n"
         f"Email: {message_obj.email}\n"
         f"Phone: {message_obj.phone}\n"
         f"Service interest: {message_obj.service_interest or 'Not specified'}\n\n"
-        f"Message:\n{message_obj.message}"
+        f"Message:\n{message_obj.message}\n\n"
+        f"View in admin: {admin_change_url(message_obj)}"
     )
+    subject_company = message_obj.company_name or message_obj.full_name
     safe_send_mail(
-        "New contact message - GyLo Softwares",
+        f"New contact message: {subject_company}",
         admin_message,
-        [settings.ADMIN_EMAIL],
+        admin_recipients(),
         f"contact message {message_obj.id}",
+        reply_to=[message_obj.email],
     )
     safe_send_mail(
         "We received your message - GyLo Softwares",
@@ -47,6 +62,7 @@ def notify_contact_message(message_obj):
 def notify_lead(lead):
     admin_message = (
         "New project inquiry submitted.\n\n"
+        f"Lead ID: {lead.id}\n"
         f"Name: {lead.full_name}\n"
         f"Company: {lead.company_name or 'Not provided'}\n"
         f"Email: {lead.email}\n"
@@ -56,14 +72,18 @@ def notify_lead(lead):
         f"Budget: {lead.get_budget_range_display()}\n"
         f"Timeline: {lead.timeline}\n"
         f"Existing system: {'Yes' if lead.has_existing_system else 'No'}\n"
-        f"Existing designs: {'Yes' if lead.has_existing_designs else 'No'}\n\n"
-        f"Project description:\n{lead.message}"
+        f"Existing designs: {'Yes' if lead.has_existing_designs else 'No'}\n"
+        f"Attachment uploaded: {'Yes' if lead.attachment else 'No'}\n\n"
+        f"Project description:\n{lead.message}\n\n"
+        f"View in admin: {admin_change_url(lead)}"
     )
+    subject_company = lead.company_name or lead.full_name
     safe_send_mail(
-        "New project inquiry - GyLo Softwares",
+        f"New project inquiry: {subject_company} - {lead.get_project_type_display()}",
         admin_message,
-        [settings.ADMIN_EMAIL],
+        admin_recipients(),
         f"lead {lead.id}",
+        reply_to=[lead.email],
     )
     safe_send_mail(
         "We received your project inquiry - GyLo Softwares",

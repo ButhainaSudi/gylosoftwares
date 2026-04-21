@@ -37,6 +37,7 @@ Update `.env` with local values. Never commit real secrets.
 - `EMAIL_USE_TLS`
 - `DEFAULT_FROM_EMAIL`
 - `ADMIN_EMAIL`
+- `ADMIN_EMAILS`
 - `SITE_URL`
 - `SECURE_SSL_REDIRECT`
 - `SESSION_COOKIE_SECURE`
@@ -102,6 +103,14 @@ ALLOWED_HOSTS=gylosoftwares.com,www.gylosoftwares.com,healthcheck.railway.app,.r
 CSRF_TRUSTED_ORIGINS=https://gylosoftwares.com,https://www.gylosoftwares.com,https://*.railway.app,https://*.up.railway.app
 SITE_URL=https://gylosoftwares.com
 DATABASE_URL=<Railway Postgres URL>
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_HOST_USER=support@gylosoftwares.com
+EMAIL_HOST_PASSWORD=<Google Workspace app password>
+EMAIL_USE_TLS=True
+DEFAULT_FROM_EMAIL=GyLo Softwares <support@gylosoftwares.com>
+ADMIN_EMAIL=support@gylosoftwares.com
+ADMIN_EMAILS=support@gylosoftwares.com
 ```
 
 The included `railway.json` sets the Railpack build command to collect static files, starts Gunicorn on Railway's `PORT`, and runs migrations before deploy.

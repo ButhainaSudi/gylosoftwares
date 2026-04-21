@@ -165,6 +165,7 @@ EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default="")
 EMAIL_USE_TLS = env("EMAIL_USE_TLS")
 DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="GyLo Softwares <support@gylosoftwares.com>")
 ADMIN_EMAIL = env("ADMIN_EMAIL", default="support@gylosoftwares.com")
+ADMIN_EMAILS = [email for email in env.list("ADMIN_EMAILS", default=[ADMIN_EMAIL]) if email]
 EMAIL_TIMEOUT = 10
 EMAIL_BACKEND = (
     "django.core.mail.backends.smtp.EmailBackend"

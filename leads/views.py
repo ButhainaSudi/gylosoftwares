@@ -1,3 +1,4 @@
+from django.db import transaction
 from django.shortcuts import redirect, render
 from django.urls import reverse
 
@@ -12,7 +13,7 @@ def contact(request):
         form = ContactMessageForm(request.POST)
         if form.is_valid():
             message = form.save()
-            notify_contact_message(message)
+            transaction.on_commit(lambda: notify_contact_message(message))
             return redirect("leads:contact_success")
     else:
         form = ContactMessageForm()
@@ -41,7 +42,7 @@ def start_project(request):
         form = LeadForm(request.POST, request.FILES)
         if form.is_valid():
             lead = form.save()
-            notify_lead(lead)
+            transaction.on_commit(lambda: notify_lead(lead))
             return redirect("leads:start_project_success")
     else:
         form = LeadForm()
