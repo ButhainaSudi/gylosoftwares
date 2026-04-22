@@ -425,6 +425,40 @@ strong {
   align-items: start;
 }
 
+.founder-section {
+  background: linear-gradient(180deg, var(--white) 0%, var(--soft) 100%);
+}
+
+.founder-grid {
+  display: grid;
+  grid-template-columns: minmax(260px, 420px) minmax(0, 1fr);
+  gap: 48px;
+  align-items: center;
+}
+
+.founder-image {
+  overflow: hidden;
+  background: var(--navy);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.founder-image img {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  object-position: center top;
+}
+
+.founder-copy {
+  max-width: 720px;
+}
+
+.founder-copy h2 {
+  max-width: 680px;
+}
+
 .check-list {
   display: grid;
   gap: 12px;
@@ -733,6 +767,7 @@ strong {
   .card-grid.three,
   .process-grid,
   .split,
+  .founder-grid,
   .footer-grid,
   .form-grid {
     grid-template-columns: 1fr;
@@ -740,6 +775,14 @@ strong {
 
   .split {
     gap: 28px;
+  }
+
+  .founder-grid {
+    gap: 30px;
+  }
+
+  .founder-image {
+    max-width: 440px;
   }
 
   .process-grid article,
@@ -814,6 +857,10 @@ strong {
   .form-card,
   .contact-panel {
     padding: 20px;
+  }
+
+  .founder-image {
+    max-width: 100%;
   }
 
   .button-row,
